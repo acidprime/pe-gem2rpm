@@ -4,7 +4,7 @@
 %define release 1
 
 Summary: <%= spec.summary %>
-Name: pe-rubygem-%{rbname}
+Name: puppetserver-%{rbname}
 
 Version: %{version}
 Release: %{release}
@@ -13,15 +13,11 @@ License: Distributable
 URL: <%= spec.homepage %>
 Source: %{rbname}-%{version}.gem
 BuildRoot: %{_tmppath}/%{name}-%{version}-root
-Requires: pe-ruby <%= spec.required_ruby_version %>
-Requires: pe-rubygems >= <%= Gem::RubyGemsVersion %>
 <% for d in spec.runtime_dependencies -%>
 <% for req in d.requirement -%>
-Requires: pe-rubygem-<%= d.name %> <%= req %>
+Requires: puppetserver-<%= d.name %> <%= req %>
 <% end -%>
 <% end -%>
-BuildRequires: pe-ruby <%= spec.required_ruby_version %>
-BuildRequires: pe-rubygems >= <%= Gem::RubyGemsVersion %>
 BuildArch: noarch
 Provides: ruby(<%= spec.name.capitalize %>) = %{version}
 AutoReqProv: no
@@ -31,7 +27,7 @@ AutoReqProv: no
 
 %description
 
-Packaged for Puppet Enterprise.
+Packaged for Puppet Server 
 
 <%= spec.description %>
 
@@ -43,7 +39,7 @@ Packaged for Puppet Enterprise.
 %install
 %{__rm} -rf %{buildroot}
 mkdir -p %{gembuilddir}
-/opt/puppet/bin/gem install --local --install-dir %{gembuilddir} --force %{SOURCE0}
+/opt/puppetlabs/bin/puppetserver gem install --local --install-dir %{gembuilddir} --force %{SOURCE0}
 <% if ! spec.executables.empty? -%>
 mkdir -p %{buildroot}/%{_bindir}
 mv %{gembuilddir}/bin/* %{buildroot}/%{_bindir}
@@ -60,7 +56,6 @@ rmdir %{gembuilddir}/bin
 <% end -%>
 %{gemdir}/gems/<%= spec.name %>-<%= spec.version %>
 
-%doc %{gemdir}/doc/<%= spec.name %>-<%= spec.version %>
 %{gemdir}/cache/
 %{gemdir}/specifications/
 
